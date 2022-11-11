@@ -19,11 +19,11 @@ import { Account } from "web3-core";
 import { AuthSigner } from "@celo/identity/lib/odis/query";
 import { FederatedAttestationsWrapper } from "@celo/contractkit/lib/wrappers/FederatedAttestations";
 import { OdisPaymentsWrapper } from "@celo/contractkit/lib/wrappers/OdisPayments";
-import { CeloTxReceipt } from "@celo/connect";
 
 function App() {
   const { kit, connect, address, destroy } = useCelo();
 
+  const E164_REGEX = /^\+[1-9][0-9]{1,14}$/;
   const ISSUER_PRIVATE_KEY = process.env.NEXT_PUBLIC_ISSUER_PRIVATE_KEY;
   let issuerKit: ContractKit,
     issuer: Account,
@@ -49,10 +49,11 @@ function App() {
     intializeIssuer();
   });
 
-  async function getIdentifier(number: string) {
+  async function getIdentifier(phoneNumber: string) {
     try {
-      // TODO: check number is a valid E164 number
-
+      if (!E164_REGEX.test(phoneNumber)) {
+        throw "Attempting to hash a non-e164 number: " + phoneNumber;
+      }
       const ONE_CENT_CUSD = issuerKit.web3.utils.toWei("0.01", "ether");
 
       let authMethod: any = OdisUtils.Query.AuthenticationMethod.WALLET_KEY;
@@ -72,7 +73,7 @@ function App() {
       );
 
       //increase quota if needed.
-      console.log("remaining quota", remainingQuota);
+      console.log("remaining ODIS quota", remainingQuota);
       if (remainingQuota < 1) {
         // give odis payment contract permission to use cUSD
         const cusd = await issuerKit.contracts.getStableToken();
@@ -99,6 +100,7 @@ function App() {
             .payInCUSD(issuer.address, ONE_CENT_CUSD)
             .sendAndWaitForReceipt();
           console.log("odis payment tx status:", odisPayment.status);
+          console.log("odis payment tx hash:", odisPayment.transactionHash);
         } else {
           throw "cUSD approval failed";
         }
@@ -108,10 +110,10 @@ function App() {
         serviceContext.odisPubKey
       );
       await blindingClient.init();
-      console.log("fetching identifier for:", number);
+      console.log("fetching identifier for:", phoneNumber);
       const response =
         await OdisUtils.PhoneNumberIdentifier.getPhoneNumberIdentifier(
-          number,
+          phoneNumber,
           issuer.address,
           authSigner,
           serviceContext,
@@ -121,9 +123,11 @@ function App() {
         );
 
       console.log(`Obfuscated phone number: ${response.phoneHash}`);
+
       console.log(
         `Obfuscated phone number is a result of: sha3('tel://${response.e164Number}__${response.pepper}') => ${response.phoneHash}`
       );
+
       return response.phoneHash;
     } catch (error) {
       throw `failed to get identifier: ${error}`;
@@ -181,7 +185,7 @@ function App() {
         console.log(identifier);
 
         // TODO: lookup list of issuers per phone number.
-        //This could be a good example to have for potential issuers to learn about this feature
+        // This could be a good example to have for potential issuers to learn about this feature.
 
         const { accounts } =
           await federatedAttestationsContract.lookupAttestations(identifier, [
@@ -197,8 +201,9 @@ function App() {
             .registerAttestationAsIssuer(identifier, address, verificationTime)
             .sendAndWaitForReceipt();
           console.log("attestation Receipt:", attestationReceipt.status);
-          //TODO: add link to txhash
-          // this would be used to lookup the transactions submitted by to federatedAttestation contract.
+          console.log(
+            `Register Attestation as issuer TX hash: https://explorer.celo.org/alfajores/tx/${attestationReceipt.transactionHash}/internal-transactions`
+          );
         } else {
           console.log("phone number already registered with this issuer");
         }
@@ -210,8 +215,8 @@ function App() {
 
   async function sendToNumber(amount: string) {
     try {
-      const amountInWei = issuerKit.web3.utils.toWei(amount, "ether");
       const identifier = await getIdentifier(numberToSend);
+      const amountInWei = issuerKit.web3.utils.toWei(amount, "ether");
 
       const attestations =
         await federatedAttestationsContract.lookupAttestations(identifier, [
@@ -233,6 +238,7 @@ function App() {
       <h1>Issuer to verify, register, and lookup numbers</h1>
       <br />
       <div>
+        {/* TODO: Remove button before deploying web app */}
         <button onClick={() => registerIssuerAccountAndWallet()}>
           Register issuer
         </button>

@@ -1,20 +1,29 @@
 export async function sendSmsVerificationToken(phoneNumber: string) {
-  const data = JSON.stringify({
-    to: phoneNumber,
-    channel: "sms",
-  });
-
-  const response = await fetch(
-    `${process.env.NEXT_PUBLIC_TWILIO_URL}/start-verify`,
-    {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: data,
+  const E164_REGEX = /^\+[1-9][0-9]{1,14}$/;
+  try {
+    if (!E164_REGEX.test(phoneNumber)) {
+      throw "Attempting to hash a non-e164 number: " + phoneNumber;
     }
-  );
-  console.log("Verification request response:", response);
+
+    const data = JSON.stringify({
+      to: phoneNumber,
+      channel: "sms",
+    });
+
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_TWILIO_URL}/start-verify`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: data,
+      }
+    );
+    console.log("Verification request response:", response);
+  } catch (error) {
+    throw `Failed SMS verification: ${error}`;
+  }
 }
 
 export async function verifyToken(
