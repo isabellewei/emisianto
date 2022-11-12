@@ -192,9 +192,6 @@ function App() {
             issuer.address,
           ]);
         console.log(accounts);
-        //TODO:
-        // from hash & issuer to address
-        // sha3('tel://${response.e164Number}__${response.pepper}')
 
         if (accounts.length == 0) {
           const attestationReceipt = await federatedAttestationsContract
