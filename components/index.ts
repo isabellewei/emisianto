@@ -1,2 +1,5 @@
-export * from './buttons';
-export * as toast from './toast';
+export {PrimaryButton, SecondaryButton} from './Buttons';
+export * as toast from './Toast';
+export * from './Footer';
+export * from './Header';
+export * from './Layout';

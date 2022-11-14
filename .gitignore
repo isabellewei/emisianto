@@ -12,6 +12,9 @@
 /.next/
 /out/
 
+# private keys
+.env
+
 # production
 /build
 

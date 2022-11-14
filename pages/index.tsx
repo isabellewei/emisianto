@@ -30,11 +30,11 @@ function App() {
     federatedAttestationsContract: FederatedAttestationsWrapper,
     odisPaymentContract: OdisPaymentsWrapper;
 
-  const [numberToUnregister, setNumberToUnregister] = useState("Phone Number");
-  const [numberToRegister, setNumberToRegister] = useState("Phone Number");
-  const [numberToSend, setNumberToSend] = useState("Receipient's Phone Number");
-  const [userCode, setUserCode] = useState("Verification Code");
-  const [sendAmount, setSendAmount] = useState("Amount to send");
+  const [numberToUnregister, setNumberToUnregister] = useState("");
+  const [numberToRegister, setNumberToRegister] = useState("");
+  const [numberToSend, setNumberToSend] = useState("");
+  const [userCode, setUserCode] = useState("");
+  const [sendAmount, setSendAmount] = useState("");
 
   useEffect(() => {
     const intializeIssuer = async () => {
@@ -284,49 +284,126 @@ function App() {
             </button>
           </div>
           <div className="sections">
-            <div>
-              <p>
-                Verify and register
-                <br />
-                your phone number.
-              </p>
-              <input
-                value={numberToRegister}
-                onChange={(e) => setNumberToRegister(e.target.value)}
-                type="text"
-              />
-              <button
-                onClick={() => sendSmsVerificationToken(numberToRegister)}
-              >
-                Verify
-              </button>
-              <br />
-              <input
-                value={userCode}
-                onChange={(e) => setUserCode(e.target.value)}
-                type="text"
-              />
-              <button
-                onClick={async () => {
-                  await registerNumber();
-                }}
-              >
-                Register
-              </button>
+            <h2 className="py-5">Verify and register your phone number.</h2>
+            <div className="mt-10 sm:mt-0">
+              <div className="md:grid md:grid-cols-2 md:gap-6">
+                <div className="mt-5 md:col-span-2 md:mt-0">
+                  <div className="overflow-hidden shadow sm:rounded-md">
+                    <div className="bg-white px-4 py-5 sm:p-6">
+                      <div className="grid grid-cols-6 gap-6">
+                        <div className="col-span-6">
+                          <label
+                            htmlFor="numberToRegister"
+                            className="block text-sm font-medium text-gray-700"
+                          >
+                            Phone number
+                          </label>
+                          <input
+                            type="text"
+                            name="numberToRegister"
+                            id="numberToRegister"
+                            value={numberToRegister}
+                            onChange={(e) =>
+                              setNumberToRegister(e.target.value)
+                            }
+                            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-celo-green focus:ring-celo-green sm:text-sm"
+                          />
+                        </div>
+                        <div className="col-span-6">
+                          <label
+                            htmlFor="userCode"
+                            className="block text-sm font-medium text-gray-700"
+                          >
+                            Verification code
+                          </label>
+                          <input
+                            type="text"
+                            name="userCode"
+                            id="userCode"
+                            value={userCode}
+                            onChange={(e) => setUserCode(e.target.value)}
+                            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-celo-green focus:ring-celo-green sm:text-sm"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                    <div className="bg-gray-50 px-4 py-3 text-right sm:px-6">
+                      <button
+                        className="mr-3 inline-flex justify-center rounded-md border border-transparent bg-celo-green py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-celo-yellow focus:outline-none focus:ring-2 focus:ring-celo-green focus:ring-offset-2"
+                        onClick={() =>
+                          sendSmsVerificationToken(numberToRegister)
+                        }
+                      >
+                        1. Verify
+                      </button>
+                      <button
+                        className="inline-flex justify-center rounded-md border border-transparent bg-celo-green py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-celo-yellow focus:outline-none focus:ring-2 focus:ring-celo-green focus:ring-offset-2"
+                        onClick={async () => {
+                          await registerNumber();
+                        }}
+                      >
+                        2. Register
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
-            <div>
-              <p>Send payment to phone number</p>
-              <input
-                value={numberToSend}
-                onChange={(e) => setNumberToSend(e.target.value)}
-                type="text"
-              />
-              <input
-                value={sendAmount}
-                onChange={(e) => setSendAmount(e.target.value)}
-                type="text"
-              />
-              <button onClick={() => sendToNumber(sendAmount)}>Send</button>
+
+            <h2 className="py-5">Send payment to phone number</h2>
+            <div className="mt-10 sm:mt-0">
+              <div className="md:grid md:grid-cols-2 md:gap-6">
+                <div className="mt-5 md:col-span-2 md:mt-0">
+                  <div className="overflow-hidden shadow sm:rounded-md">
+                    <div className="bg-white px-4 py-5 sm:p-6">
+                      <div className="grid grid-cols-6 gap-6">
+                        <div className="col-span-6">
+                          <label
+                            htmlFor="numberToRegister"
+                            className="block text-sm font-medium text-gray-700"
+                          >
+                            Recipient phone number
+                          </label>
+                          <input
+                            type="text"
+                            name="numberToRegister"
+                            id="numberToRegister"
+                            value={numberToSend}
+                            onChange={(e) => setNumberToSend(e.target.value)}
+                            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-celo-green focus:ring-celo-green sm:text-sm"
+                          />
+                        </div>
+                        <div className="col-span-6">
+                          <label
+                            htmlFor="userCode"
+                            className="block text-sm font-medium text-gray-700"
+                          >
+                            Amount to send
+                          </label>
+                          <input
+                            type="text"
+                            name="userCode"
+                            id="userCode"
+                            value={sendAmount}
+                            onChange={(e) => setSendAmount(e.target.value)}
+                            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-celo-green focus:ring-celo-green sm:text-sm"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                    <div className="bg-gray-50 px-4 py-3 text-right sm:px-6">
+                      <button
+                        className="inline-flex justify-center rounded-md border border-transparent bg-celo-green py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-celo-yellow focus:outline-none focus:ring-2 focus:ring-celo-green focus:ring-offset-2"
+                        onClick={async () => {
+                          sendToNumber(sendAmount);
+                        }}
+                      >
+                        Send
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -335,19 +412,4 @@ function App() {
   );
 }
 
-function WrappedApp() {
-  return (
-    <CeloProvider
-      dapp={{
-        name: "Register Phone Number",
-        description: "This app allows you to register a number with Celo",
-        url: "https://example.com",
-        icon: "",
-      }}
-      network={Alfajores}
-    >
-      <App />
-    </CeloProvider>
-  );
-}
-export default WrappedApp;
+export default App;
