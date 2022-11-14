@@ -30,6 +30,7 @@ function App() {
     federatedAttestationsContract: FederatedAttestationsWrapper,
     odisPaymentContract: OdisPaymentsWrapper;
 
+  const [numberToUnregister, setNumberToUnregister] = useState("Phone Number");
   const [numberToRegister, setNumberToRegister] = useState("Phone Number");
   const [numberToSend, setNumberToSend] = useState("Receipient's Phone Number");
   const [userCode, setUserCode] = useState("Verification Code");
@@ -48,6 +49,20 @@ function App() {
     };
     intializeIssuer();
   });
+
+  async function unregisterPhoneNumber(phoneNumber: string) {
+    try {
+      const identifier = await getIdentifier(phoneNumber);
+      const receipt = await federatedAttestationsContract
+        .revokeAttestation(identifier, issuer.address, address)
+        .sendAndWaitForReceipt();
+      console.log(
+        `revoke attestation transaction receipt status: ${receipt.status}`
+      );
+    } catch (error) {
+      throw `Failed to unregister phone number: ${error}`;
+    }
+  }
 
   async function getIdentifier(phoneNumber: string) {
     try {
@@ -197,7 +212,7 @@ function App() {
           const attestationReceipt = await federatedAttestationsContract
             .registerAttestationAsIssuer(identifier, address, verificationTime)
             .sendAndWaitForReceipt();
-          console.log("attestation Receipt:", attestationReceipt.status);
+          console.log("attestation Receipt status:", attestationReceipt.status);
           console.log(
             `Register Attestation as issuer TX hash: https://explorer.celo.org/alfajores/tx/${attestationReceipt.transactionHash}/internal-transactions`
           );
@@ -255,6 +270,19 @@ function App() {
             {address}
           </p>
           <button onClick={destroy}>Disconnect your wallet</button>
+          <br />
+          <br />
+          <div>
+            <input
+              value={numberToUnregister}
+              onChange={(e) => setNumberToUnregister(e.target.value)}
+              type="text"
+            />
+
+            <button onClick={() => unregisterPhoneNumber(numberToUnregister)}>
+              Unregister phone number
+            </button>
+          </div>
           <div className="sections">
             <div>
               <p>
