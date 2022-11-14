@@ -30,7 +30,7 @@ function App() {
     federatedAttestationsContract: FederatedAttestationsWrapper,
     odisPaymentContract: OdisPaymentsWrapper;
 
-  const [numberToUnregister, setNumberToUnregister] = useState("");
+  const [numberToDeregister, setNumberToDeregister] = useState("");
   const [numberToRegister, setNumberToRegister] = useState("");
   const [numberToSend, setNumberToSend] = useState("");
   const [userCode, setUserCode] = useState("");
@@ -50,7 +50,7 @@ function App() {
     intializeIssuer();
   });
 
-  async function unregisterPhoneNumber(phoneNumber: string) {
+  async function deregisterPhoneNumber(phoneNumber: string) {
     try {
       const identifier = await getIdentifier(phoneNumber);
       const receipt = await federatedAttestationsContract
@@ -60,7 +60,7 @@ function App() {
         `revoke attestation transaction receipt status: ${receipt.status}`
       );
     } catch (error) {
-      throw `Failed to unregister phone number: ${error}`;
+      throw `Failed to deregister phone number: ${error}`;
     }
   }
 
@@ -270,19 +270,19 @@ function App() {
             {address}
           </p>
           <button onClick={destroy}>Disconnect your wallet</button>
-          <br />
+          {/* <br />
           <br />
           <div>
             <input
-              value={numberToUnregister}
-              onChange={(e) => setNumberToUnregister(e.target.value)}
+              value={numberToDeregister}
+              onChange={(e) => setNumberToDeregister(e.target.value)}
               type="text"
             />
 
-            <button onClick={() => unregisterPhoneNumber(numberToUnregister)}>
-              Unregister phone number
+            <button onClick={() => deregisterPhoneNumber(numberToDeregister)}>
+              Deregister phone number
             </button>
-          </div>
+          </div> */}
           <div className="sections">
             <h2 className="py-5">Verify and register your phone number.</h2>
             <div className="mt-10 sm:mt-0">
@@ -399,6 +399,48 @@ function App() {
                         }}
                       >
                         Send
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <h2 className="py-5">Deregister phone number</h2>
+            <div className="mt-10 sm:mt-0">
+              <div className="md:grid md:grid-cols-2 md:gap-6">
+                <div className="mt-5 md:col-span-2 md:mt-0">
+                  <div className="overflow-hidden shadow sm:rounded-md">
+                    <div className="bg-white px-4 py-5 sm:p-6">
+                      <div className="grid grid-cols-6 gap-6">
+                        <div className="col-span-6">
+                          <label
+                            htmlFor="numberToRegister"
+                            className="block text-sm font-medium text-gray-700"
+                          >
+                            Phone number
+                          </label>
+                          <input
+                            type="text"
+                            name="numberToDeregister"
+                            id="numberToDeregister"
+                            value={numberToDeregister}
+                            onChange={(e) =>
+                              setNumberToDeregister(e.target.value)
+                            }
+                            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-celo-green focus:ring-celo-green sm:text-sm"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                    <div className="bg-gray-50 px-4 py-3 text-right sm:px-6">
+                      <button
+                        className="mr-3 inline-flex justify-center rounded-md border border-transparent bg-celo-green py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-celo-yellow focus:outline-none focus:ring-2 focus:ring-celo-green focus:ring-offset-2"
+                        onClick={() =>
+                          deregisterPhoneNumber(numberToDeregister)
+                        }
+                      >
+                        Deregister
                       </button>
                     </div>
                   </div>
