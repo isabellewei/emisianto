@@ -39,6 +39,7 @@
   },
   "browser": {
     "@celo/poprf": false,
-    "source-map-support": false
+    "source-map-support": false,
+    "net": false
   }
 }

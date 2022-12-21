@@ -21,7 +21,9 @@ import DeregisterNumberModal from "./deregisterNumber";
 import { IdentifierPrefix } from "@celo/identity/lib/odis/identifier";
 
 function App() {
-  const { kit, connect, address, destroy } = useCelo();
+
+  let [componentInitialized, setComponentInitialized] = useState(false);
+  const { initialised, kit, connect, address, destroy } = useCelo();
 
   const ISSUER_PRIVATE_KEY = process.env.NEXT_PUBLIC_ISSUER_PRIVATE_KEY;
   let issuerKit: ContractKit,
@@ -34,6 +36,12 @@ function App() {
   const [isSendToNumberModalOpen, setIsSendToNumberModalOpen] = useState(false);
   const [isDeregisterNumberModalOpen, setIsDeregisterNumberModalOpen] =
     useState(false);
+
+  useEffect(() => {
+    if (initialised) {
+      setComponentInitialized(true);
+    }
+  }, [initialised]);
 
   useEffect(() => {
     const intializeIssuer = async () => {
@@ -244,24 +252,15 @@ function App() {
   return (
     <main>
       <br />
-      {!address ? (
-        <button
-          onClick={() =>
-            connect().catch((e) => toast.error((e as Error).message))
-          }
-          className="text-celo-green font-medium py-2 mb-2"
-        >
-          Connect your wallet
-        </button>
-      ) : (
+      {componentInitialized && address ? (
         <div className="flex flex-col mx-auto content-center">
-          <p className="">Connected Address: {address}</p>
+          <p className="flex flex-col mx-auto content-center">Connected address (user):</p> 
+          <p>{address}</p>
           <button
-            onClick={destroy}
-            className="text-celo-green font-medium py-2 mb-2 self-center"
-          >
-            Disconnect your wallet
-          </button>
+              type="button"
+              className="inline-flex self-center items-center rounded border border-transparent bg-celo-gold px-2.5 my-5 py-1.5 text-xs font-medium text-white shadow-sm hover:bg-celo-gold focus:outline-none focus:ring-2 focus:ring-celo-green focus:ring-offset-2"
+              onClick={destroy}
+          >Disconnect user</button>
 
           <div className="my-5 sm:mt-0">
             <div className="overflow-hidden shadow sm:rounded-md">
@@ -317,7 +316,15 @@ function App() {
             onDismiss={() => setIsDeregisterNumberModalOpen(false)}
             deregisterNumber={deregisterPhoneNumber}
           />
-        </div>
+        </div>        
+      ) : (
+        <button
+            type="button"
+            className="inline-flex items-center rounded border border-transparent bg-celo-green px-2.5 py-1.5 text-xs font-medium text-white shadow-sm hover:bg-celo-green focus:outline-none focus:ring-2 focus:ring-celo-yellow focus:ring-offset-2"
+            onClick={() =>
+                connect().catch((e) => console.log((e as Error).message))
+            }
+        >Connect user</button>
       )}
     </main>
   );
