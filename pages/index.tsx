@@ -258,15 +258,15 @@ function App() {
           <p>{address}</p>
           <button
               type="button"
-              className="inline-flex self-center items-center rounded border border-transparent bg-celo-gold px-2.5 my-5 py-1.5 text-xs font-medium text-white shadow-sm hover:bg-celo-gold focus:outline-none focus:ring-2 focus:ring-celo-green focus:ring-offset-2"
+              className="inline-flex self-center items-center rounded-full border border-wood bg-prosperity py-5 px-10 my-5 text-md font-medium text-black hover:bg-snow"
               onClick={destroy}
           >Disconnect user</button>
 
-          <div className="my-5 sm:mt-0">
-            <div className="overflow-hidden shadow sm:rounded-md">
-              <div className="bg-gray-50 px-4 py-5 text-center sm:px-6">
+          <div className="my-0 sm:mt-0">
+            <div className="overflow-hidden">
+              <div className="bg-fig border-x border-t border-lavender px-4 py-5 text-center sm:px-6">
                 <button
-                  className="mr-3 inline-flex justify-center rounded-md border border-transparent bg-celo-green py-2 px-4 text-sm font-medium text-white shadow-sm focus:outline-none focus:ring-2 focus:ring-celo-green focus:ring-offset-2"
+                  className="mr-3 inline-flex justify-center py-2 px-4 text-sm font-medium text-white hover:text-sand"
                   onClick={() => setIsRegisterNumberModalOpen(true)}
                 >
                   Verify and register your phone number
@@ -275,11 +275,11 @@ function App() {
             </div>
           </div>
 
-          <div className="my-5 sm:mt-0">
-            <div className="overflow-hidden shadow sm:rounded-md">
-              <div className="bg-gray-50 px-4 py-5 text-center sm:px-6">
+          <div className="my-0 sm:mt-0">
+            <div className="overflow-hidden">
+              <div className="bg-fig border-x border-t border-lavender px-4 py-5 text-center sm:px-6">
                 <button
-                  className="mr-3 inline-flex justify-center rounded-md border border-transparent bg-celo-green py-2 px-4 text-sm font-medium text-white shadow-sm focus:outline-none focus:ring-2 focus:ring-celo-green focus:ring-offset-2"
+                  className="mr-3 inline-flex justify-center py-2 px-4 text-sm font-medium text-white hover:text-sand"
                   onClick={() => setIsSendToNumberModalOpen(true)}
                 >
                   Send payment to a phone number
@@ -288,11 +288,11 @@ function App() {
             </div>
           </div>
 
-          <div className="my-5 sm:mt-0">
-            <div className="overflow-hidden shadow sm:rounded-md">
-              <div className="bg-gray-50 px-4 py-5 text-center sm:px-6">
+          <div className="my-0 sm:mt-0">
+            <div className="overflow-hidden">
+              <div className="bg-fig border-x border-t border-b border-lavender px-4 py-5 text-center sm:px-6">
                 <button
-                  className="mr-3 inline-flex justify-center rounded-md border border-transparent bg-celo-green py-2 px-4 text-sm font-medium text-white shadow-sm focus:outline-none focus:ring-2 focus:ring-celo-green focus:ring-offset-2"
+                  className="mr-3 inline-flex justify-center py-2 px-4 text-sm font-medium text-white hover:text-sand"
                   onClick={() => setIsDeregisterNumberModalOpen(true)}
                 >
                   De-register your phone number
@@ -320,7 +320,7 @@ function App() {
       ) : (
         <button
             type="button"
-            className="inline-flex items-center rounded border border-transparent bg-celo-green px-2.5 py-1.5 text-xs font-medium text-white shadow-sm hover:bg-celo-green focus:outline-none focus:ring-2 focus:ring-celo-yellow focus:ring-offset-2"
+            className="inline-flex items-center rounded-full border border-wood bg-prosperity py-5 px-10 text-md font-medium text-black hover:bg-snow"
             onClick={() =>
                 connect().catch((e) => console.log((e as Error).message))
             }
