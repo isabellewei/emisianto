@@ -21,7 +21,7 @@ import DeregisterNumberModal from "./deregisterNumber";
 import { IdentifierPrefix } from "@celo/identity/lib/odis/identifier";
 
 function App() {
-  const { kit, connect, address, destroy } = useCelo();
+  const { kit, connect, address, destroy, network } = useCelo();
 
   const ISSUER_PRIVATE_KEY = process.env.NEXT_PUBLIC_ISSUER_PRIVATE_KEY;
   let issuerKit: ContractKit,
@@ -37,7 +37,7 @@ function App() {
 
   useEffect(() => {
     const intializeIssuer = async () => {
-      issuerKit = newKit("https://alfajores-forno.celo-testnet.org");
+      issuerKit = newKit(network.rpcUrl);
       issuer =
         issuerKit.web3.eth.accounts.privateKeyToAccount(ISSUER_PRIVATE_KEY);
       issuerKit.addAccount(ISSUER_PRIVATE_KEY);
@@ -134,7 +134,7 @@ function App() {
     }
   }
 
-  // this function needs to be called once when using a new issuer address
+  // this function needs to be called once when using a new issuer address for the first time
   async function registerIssuerAccountAndWallet() {
     if (issuer.address == undefined) {
       throw "issuer not found";
@@ -195,7 +195,7 @@ function App() {
           .sendAndWaitForReceipt();
         console.log("attestation Receipt status:", attestationReceipt.status);
         console.log(
-          `Register Attestation as issuer TX hash: https://explorer.celo.org/alfajores/tx/${attestationReceipt.transactionHash}/internal-transactions`
+          `Register Attestation as issuer TX hash: ${network.explorer}/tx/${attestationReceipt.transactionHash}/internal-transactions`
         );
       } else {
         console.log("phone number already registered with this issuer");

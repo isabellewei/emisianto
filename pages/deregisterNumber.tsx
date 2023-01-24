@@ -28,11 +28,10 @@ export default function DeregisterNumberModal({
       setInvalidInput(true);
       return;
     }
-    // TODO: choose from linked addresses
+    // TODO: check that phone number has actually been linked to user's account
     setInvalidInput(false);
     setActiveIndex(1);
     await deregisterNumber(number);
-    // TODO: handle failed deregister, ex. no attestation to revoke
     setDoneLoading(true);
   }
 
