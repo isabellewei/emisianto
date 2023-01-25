@@ -62,9 +62,11 @@ export default function SendToNumberModal({
   const customStyles = {
     content: {
       margin: "10%",
-      borderRadius: "15px",
+      borderRadius: "0px",
       padding: "0",
-      boxShadow: "0 1px 3px 0 rgb(0 0 0 / 0.1)",
+      boxShadow: "0",
+      background: "#FCF6F1",
+      border: '1px solid #CCCCCC',
       height: "fit-content",
     },
   };
@@ -98,7 +100,7 @@ export default function SendToNumberModal({
 
           <div className="object-bottom bg-gray-50 px-4 py-3 text-right sm:px-6 ">
             <button
-              className="mr-3 inline-flex object-bottom justify-center rounded-md border border-transparent bg-celo-green py-2 px-4 text-sm font-medium text-white shadow-sm focus:outline-none focus:ring-2 focus:ring-celo-green focus:ring-offset-2"
+              className="inline-flex items-center rounded-full border border-wood bg-prosperity py-2 px-10 text-md font-medium text-black hover:bg-snow"
               onClick={checkPhoneNumber}
             >
               Send
@@ -165,7 +167,7 @@ export default function SendToNumberModal({
       ) : null}
 
       <button
-        className="mt-5 mr-3 absolute top-2 right-3 rounded-md border border-transparent bg-red py-2 px-4 text-sm font-medium text-white shadow-sm focus:outline-none focus:ring-2 focus:ring-red focus:ring-offset-2"
+        className="mt-5 mr-3 absolute top-2 right-3 py-2 px-4 text-md font-medium text-black"
         onClick={closeModal}
       >
         Close
